@@ -134,35 +134,9 @@ class picoGpt(nn.Module):
             idx= torch.cat([idx, idx_next], dim = 1)
         return idx
     
-with open('input.txt', 'r', encoding='utf-8') as f:
-    text = f.read()
-chars = sorted(list(set(text)))
-stoi = { ch: i for i, ch in enumerate(chars)}
-itos = { i: ch for i, ch in enumerate(chars)}
 
-vocab_size = len(chars)
-encode = lambda x: [stoi[ch] for ch in x]  
-decode = lambda x: ''.join([itos[i] for i in x])
-enc = encode ("hi")
-decode(enc)
+# model = picoGpt()
 
-data = torch.tensor(encode(text), dtype = torch.long)
-n = int(0.9*len(data))
-train = data[:n]
-val = data[n:]
-def get_batch(split):
+# model.to(device)
 
-    data =  train if split == 'train' else val
-    ix = torch.randint(len(data)- block_size, (batch_size,))
-    x = torch.stack([data[i:i+block_size] for i in ix])
-    y = torch.stack([data[i+1: i+block_size+1] for i in ix])
-    x, y = x.to(device), y.to(device)
-
-    return x,y
-
-
-model = picoGpt()
-
-model.to(device)
-
-print(sum(p.numel() for p in model.parameters())/1e6, 'M params')
+# print(sum(p.numel() for p in model.parameters())/1e6, 'M params')
